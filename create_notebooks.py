@@ -266,7 +266,7 @@ def create_slides_notebook():
     cells.append(nbf.v4.new_markdown_cell("""# Introduction to Convolutional Neural Networks
 ---
 ## University of Calgary
-### Dr. Saman Rahbar"""))
+### Saman Rahbar, Senior Applied Scientist"""))
     
     # What are CNNs
     cells.append(nbf.v4.new_markdown_cell("""# What are CNNs?

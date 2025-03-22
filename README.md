@@ -10,17 +10,12 @@ This repository contains comprehensive materials for teaching Convolutional Neur
 ├── README.md
 ├── requirements.txt
 ├── data/                    # Directory for storing datasets
-├── src/                     # Source code modules
-│   ├── __init__.py
-│   ├── cnn_model.py        # CNN model implementation
-│   ├── data_utils.py       # Data loading and preprocessing utilities
-│   └── visualization.py    # Visualization utilities
 ├── notebooks/              # Jupyter notebooks
-│   ├── 01_CNN_Introduction.ipynb
-│   ├── 02_CNN_Implementation.ipynb
-│   └── 03_CNN_Training.ipynb
-└── slides/                 # Jupyter slides
-    └── CNN_Lecture.slides.html
+│   ├── 01_CNN_Introduction.ipynb    # Main lecture notebook
+│   └── CNN_Lecture.slides.ipynb     # Jupyter slides
+└── results/               # Directory for storing results
+    ├── models/           # Trained model checkpoints
+    └── plots/            # Generated visualizations
 ```
 
 ### Setup Instructions
