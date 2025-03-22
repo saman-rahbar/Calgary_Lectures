@@ -250,6 +250,208 @@ Let's test our model on some example images."""))
 # Visualize some predictions
 visualize_predictions(model, test_loader)"""))
     
+    # Add a new section for simple examples
+    cells.append(nbf.v4.new_markdown_cell("""# Simple CNN Examples and Visualizations
+Let's break down CNNs into simple, intuitive examples that you can run and understand.
+
+## 1. Understanding Convolution with a Simple Example
+Think of convolution like using a magnifying glass to look for specific patterns in an image. Let's create a simple example:"""))
+
+    cells.append(nbf.v4.new_code_cell("""import numpy as np
+import matplotlib.pyplot as plt
+
+# Create a simple 5x5 image with a diagonal pattern
+image = np.array([
+    [1, 0, 0, 0, 0],
+    [0, 1, 0, 0, 0],
+    [0, 0, 1, 0, 0],
+    [0, 0, 0, 1, 0],
+    [0, 0, 0, 0, 1]
+])
+
+# Create a 3x3 filter to detect diagonal patterns
+filter_3x3 = np.array([
+    [1, 0, 0],
+    [0, 1, 0],
+    [0, 0, 1]
+])
+
+# Perform convolution
+def simple_convolution(image, filter):
+    output = np.zeros((3, 3))
+    for i in range(3):
+        for j in range(3):
+            output[i, j] = np.sum(image[i:i+3, j:j+3] * filter)
+    return output
+
+# Get the output
+output = simple_convolution(image, filter_3x3)
+
+# Visualize
+plt.figure(figsize=(15, 5))
+plt.subplot(131)
+plt.imshow(image, cmap='gray')
+plt.title('Input Image')
+plt.axis('off')
+
+plt.subplot(132)
+plt.imshow(filter_3x3, cmap='gray')
+plt.title('Filter (Pattern Detector)')
+plt.axis('off')
+
+plt.subplot(133)
+plt.imshow(output, cmap='gray')
+plt.title('Output (Detected Pattern)')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()"""))
+
+    cells.append(nbf.v4.new_markdown_cell("""### What's happening here?
+1. **Input Image**: Think of it like a small photo (5x5 pixels)
+2. **Filter**: Like a magnifying glass looking for diagonal patterns
+3. **Output**: Shows where the pattern was found (brighter = stronger match)
+
+## 2. Real MNIST Example with Visualization
+Let's look at how a CNN processes a real digit image:"""))
+
+    cells.append(nbf.v4.new_code_cell("""import torch
+import torchvision
+import matplotlib.pyplot as plt
+
+# Load MNIST dataset
+transform = torchvision.transforms.ToTensor()
+test_dataset = torchvision.datasets.MNIST(root='./data', train=False, transform=transform)
+test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=True)
+
+# Get one image
+image, label = next(iter(test_loader))
+
+# Create a simple CNN model
+class SimpleCNN(torch.nn.Module):
+    def __init__(self):
+        super(SimpleCNN, self).__init__()
+        self.conv1 = torch.nn.Conv2d(1, 16, kernel_size=3, padding=1)
+        self.relu = torch.nn.ReLU()
+        self.pool = torch.nn.MaxPool2d(2)
+        
+    def forward(self, x):
+        x = self.conv1(x)
+        x = self.relu(x)
+        x = self.pool(x)
+        return x
+
+# Create model and process image
+model = SimpleCNN()
+output = model(image)
+
+# Visualize the process
+plt.figure(figsize=(15, 5))
+plt.subplot(131)
+plt.imshow(image[0, 0].numpy(), cmap='gray')
+plt.title(f'Input Digit: {label.item()}')
+plt.axis('off')
+
+plt.subplot(132)
+plt.imshow(output[0, 0].detach().numpy(), cmap='gray')
+plt.title('First Layer Output')
+plt.axis('off')
+
+plt.subplot(133)
+plt.imshow(output[0, 15].detach().numpy(), cmap='gray')
+plt.title('Another Feature Map')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()"""))
+
+    cells.append(nbf.v4.new_markdown_cell("""### Understanding the Process
+1. **Input**: A handwritten digit (28x28 pixels)
+2. **First Layer**: Creates 16 different "feature maps" (like looking for 16 different patterns)
+3. **Output**: Shows how well each pattern matches the input
+
+## 3. Real-World Analogy: Pattern Recognition
+Think of CNNs like a detective looking for clues in a photo:
+
+1. **Convolution Layer**: Like using different magnifying glasses to look for specific patterns
+   - One might look for edges
+   - Another for curves
+   - Another for corners
+
+2. **ReLU**: Like saying "if I see something interesting, mark it; if not, ignore it"
+
+3. **MaxPooling**: Like taking a step back to see the bigger picture
+   - Reduces the image size
+   - Keeps the most important features
+
+4. **Fully Connected Layer**: Like making a final decision based on all the clues found
+
+Let's see this in action with a real image:"""))
+
+    cells.append(nbf.v4.new_code_cell("""import cv2
+import numpy as np
+
+# Create a simple edge detection filter
+edge_filter = np.array([
+    [-1, -1, -1],
+    [-1,  8, -1],
+    [-1, -1, -1]
+])
+
+# Create a simple corner detection filter
+corner_filter = np.array([
+    [1, -1, -1],
+    [-1,  1, -1],
+    [-1, -1,  1]
+])
+
+# Load and process a simple image
+image = np.array([
+    [0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0]
+])
+
+# Apply filters
+edge_output = simple_convolution(image, edge_filter)
+corner_output = simple_convolution(image, corner_filter)
+
+# Visualize
+plt.figure(figsize=(15, 5))
+plt.subplot(131)
+plt.imshow(image, cmap='gray')
+plt.title('Original Image')
+plt.axis('off')
+
+plt.subplot(132)
+plt.imshow(edge_output, cmap='gray')
+plt.title('Edge Detection')
+plt.axis('off')
+
+plt.subplot(133)
+plt.imshow(corner_output, cmap='gray')
+plt.title('Corner Detection')
+plt.axis('off')
+
+plt.tight_layout()
+plt.show()"""))
+
+    cells.append(nbf.v4.new_markdown_cell("""### What We Learned
+1. **Different Filters Find Different Things**:
+   - Edge filter finds edges (like looking for sudden changes)
+   - Corner filter finds corners (like looking for intersections)
+
+2. **CNN Layers Work Together**:
+   - First layer finds basic patterns (edges, corners)
+   - Later layers combine these to find more complex patterns
+
+3. **Real-World Applications**:
+   - Face recognition: Looks for eyes, nose, mouth patterns
+   - Object detection: Looks for shapes and textures
+   - Medical imaging: Looks for specific tissue patterns"""))
+
     # Add all cells to the notebook
     nb.cells = cells
     
